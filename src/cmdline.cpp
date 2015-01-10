@@ -84,9 +84,9 @@ namespace boost { namespace program_options { namespace detail {
 #endif
 
 
-    cmdline::cmdline(const vector<string>& args)
+    cmdline::cmdline(const vector<string>& args_)
     {
-        init(args);
+        init(args_);
     }
 
     cmdline::cmdline(int argc, const char*const * argv)
@@ -101,9 +101,9 @@ namespace boost { namespace program_options { namespace detail {
     }
 
     void
-    cmdline::init(const vector<string>& args)
+    cmdline::init(const vector<string>& args_)
     {
-        this->args = args;        
+        this->args = args_;
         m_style = command_line_style::default_style;
         m_desc = 0;
         m_positional = 0;
@@ -505,10 +505,10 @@ namespace boost { namespace program_options { namespace detail {
     }
 
     vector<option> 
-    cmdline::parse_long_option(vector<string>& args)
+    cmdline::parse_long_option(vector<string>& args_)
     {
         vector<option> result;
-        const string& tok = args[0];
+        const string& tok = args_[0];
         if (tok.size() >= 3 && tok[0] == '-' && tok[1] == '-')
         {   
             string name, adjacent;
@@ -535,16 +535,16 @@ namespace boost { namespace program_options { namespace detail {
                 opt.value.push_back(adjacent);
             opt.original_tokens.push_back(tok);
             result.push_back(opt);
-            args.erase(args.begin());
+            args_.erase(args_.begin());
         }
         return result;
     }
 
 
     vector<option> 
-    cmdline::parse_short_option(vector<string>& args)
+    cmdline::parse_short_option(vector<string>& args_)
     {
-        const string& tok = args[0];
+        const string& tok = args_[0];
         if (tok.size() >= 2 && tok[0] == '-' && tok[1] != '-')
         {   
             vector<option> result;
@@ -584,7 +584,7 @@ namespace boost { namespace program_options { namespace detail {
 
                     if (adjacent.empty())
                     {
-                        args.erase(args.begin());
+                        args_.erase(args_.begin());
                         break;
                     }
 
@@ -598,7 +598,7 @@ namespace boost { namespace program_options { namespace detail {
                     if (!adjacent.empty())
                         opt.value.push_back(adjacent);
                     result.push_back(opt);
-                    args.erase(args.begin());                    
+                    args_.erase(args_.begin());                    
                     break;
                 }
             }
@@ -608,10 +608,10 @@ namespace boost { namespace program_options { namespace detail {
     }
 
     vector<option> 
-    cmdline::parse_dos_option(vector<string>& args)
+    cmdline::parse_dos_option(vector<string>& args_)
     {
         vector<option> result;
-        const string& tok = args[0];
+        const string& tok = args_[0];
         if (tok.size() >= 2 && tok[0] == '/')
         {   
             string name = "-" + tok.substr(1,1);
@@ -623,15 +623,15 @@ namespace boost { namespace program_options { namespace detail {
                 opt.value.push_back(adjacent);
             opt.original_tokens.push_back(tok);
             result.push_back(opt);
-            args.erase(args.begin());
+            args_.erase(args_.begin());
         }
         return result;
     }
 
     vector<option> 
-    cmdline::parse_disguised_long_option(vector<string>& args)
+    cmdline::parse_disguised_long_option(vector<string>& args_)
     {
-        const string& tok = args[0];
+        const string& tok = args_[0];
         if (tok.size() >= 2 && 
             ((tok[0] == '-' && tok[1] != '-') ||
              ((m_style & allow_slash_for_short) && tok[0] == '/')))            
@@ -643,10 +643,10 @@ namespace boost { namespace program_options { namespace detail {
                                          is_style_active(long_case_insensitive),
                                          is_style_active(short_case_insensitive)))
                 {
-                    args[0].insert(0, "-");
-                    if (args[0][1] == '/')
-                        args[0][1] = '-';
-                    return parse_long_option(args);
+                    args_[0].insert(0, "-");
+                    if (args_[0][1] == '/')
+                        args_[0][1] = '-';
+                    return parse_long_option(args_);
                 }
             } 
             catch(error_with_option_name& e)
@@ -660,37 +660,37 @@ namespace boost { namespace program_options { namespace detail {
     }
 
     vector<option> 
-    cmdline::parse_terminator(vector<string>& args)
+    cmdline::parse_terminator(vector<string>& args_)
     {
         vector<option> result;
-        const string& tok = args[0];
+        const string& tok = args_[0];
         if (tok == "--")
         {
-            for(unsigned i = 1; i < args.size(); ++i)
+            for(unsigned i = 1; i < args_.size(); ++i)
             {
                 option opt;
-                opt.value.push_back(args[i]);
-                opt.original_tokens.push_back(args[i]);
+                opt.value.push_back(args_[i]);
+                opt.original_tokens.push_back(args_[i]);
                 opt.position_key = INT_MAX;
                 result.push_back(opt);
             }
-            args.clear();
+            args_.clear();
         }
         return result;
     }
 
     vector<option> 
-    cmdline::handle_additional_parser(vector<string>& args)
+    cmdline::handle_additional_parser(vector<string>& args_)
     {
         vector<option> result;
-        pair<string, string> r = m_additional_parser(args[0]);
+        pair<string, string> r = m_additional_parser(args_[0]);
         if (!r.first.empty()) {
             option next;
             next.string_key = r.first;
             if (!r.second.empty())
                 next.value.push_back(r.second);
             result.push_back(next);
-            args.erase(args.begin());
+            args_.erase(args_.begin());
         }
         return result;
     }

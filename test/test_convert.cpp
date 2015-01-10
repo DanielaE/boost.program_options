@@ -114,6 +114,7 @@ void test_convert(const std::string& input,
             high &= 0xFF;
             unsigned high2 = expected_output[2*i+1];            
             BOOST_CHECK(high == high2);
+            (void)high2;
         }
     }
 

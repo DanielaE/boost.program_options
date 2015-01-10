@@ -20,6 +20,11 @@ using namespace std;
 
 #include "minitest.hpp"
 
+#ifdef BOOST_MSVC
+#  pragma warning(disable: 4505) // unreferenced local function has been removed
+#  pragma warning(disable: 4702) // unreachable code
+#endif
+
 vector<string> sv(const char* array[], unsigned size)
 {
     vector<string> r;
