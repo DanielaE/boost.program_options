@@ -48,7 +48,7 @@ int translate_syntax_error_kind(invalid_command_line_syntax::kind_t k)
     e = table + sizeof(table)/sizeof(table[0]);
     i = std::find(b, e, k);
     assert(i != e);
-    return std::distance(b, i) + 3;
+    return static_cast<int>(std::distance(b, i)) + 3;
 }
 
 struct test_case {
@@ -146,10 +146,10 @@ void test_cmdline(const char* syntax,
                 }
             }
         }
-        catch(unknown_option& e) {
+        catch(unknown_option&) {
             status = s_unknown_option;
         }
-        catch(ambiguous_option& e) {
+        catch(ambiguous_option&) {
             status = s_ambiguous_option;
         }
         catch(invalid_command_line_syntax& e) {
