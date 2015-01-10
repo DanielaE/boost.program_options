@@ -17,7 +17,7 @@ using namespace boost::program_options;
 
 void check_equal(const std::vector<string>& actual, char **expected, int n)
 {
-    if (actual.size() != n)
+    if (static_cast<int>(actual.size()) != n)
     {
         std::cerr << "Size mismatch between expected and actual data\n";
         abort();

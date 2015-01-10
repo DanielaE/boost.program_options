@@ -18,6 +18,10 @@ namespace po = boost::program_options;
 #include <vector>
 using namespace std;
 
+#ifdef BOOST_MSVC
+#  pragma warning(disable: 4702) // unreachable code
+#endif
+
 void test_positional_options()
 {
     positional_options_description p;
