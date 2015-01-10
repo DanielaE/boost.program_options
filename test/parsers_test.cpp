@@ -38,6 +38,10 @@ using namespace std;
     { \
     }
 
+#ifdef BOOST_MSVC
+#  pragma warning(disable: 4505) // unreferenced local function has been removed
+#endif
+
 pair<string, vector< vector<string> > > msp(const string& s1)
 {
     return std::make_pair(s1, vector< vector<string> >());
